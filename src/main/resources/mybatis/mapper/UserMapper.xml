@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.demo.mybatis.UserDao">
+
+    <insert id="insertUser" parameterType="com.test.demo.mybatis.User">
+        insert into t_user(u_name) values(#{uName})
+    </insert>
+
+    <select id="getUserById" parameterType="java.lang.Integer" resultType="com.test.demo.mybatis.User">
+        select u_id,u_name from t_user where u_id = #{uId}
+    </select>
+
+    <update id="updateUser" parameterType="com.test.demo.mybatis.User">
+        update t_user set u_name = #{uName} where u_id = #{uId}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from t_user where u_id = #{uId}
+    </delete>
+
+</mapper>

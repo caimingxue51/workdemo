@@ -1,0 +1,92 @@
+package com.test.demo.sharding;
+
+import com.google.common.base.Preconditions;
+import io.shardingsphere.core.keygen.KeyGenerator;
+import io.shardingsphere.core.keygen.TimeService;
+
+import lombok.Setter;
+
+import java.util.Calendar;
+
+public final class DefaultKeyGenerator implements KeyGenerator {
+
+    public static final long EPOCH;
+
+    // 自增长序列的长度（单位是位时的长度）
+    private static final long SEQUENCE_BITS = 12L;
+
+    // workerId的长度（单位是位时的长度）
+    private static final long WORKER_ID_BITS = 10L;
+
+    private static final long SEQUENCE_MASK = (1 << SEQUENCE_BITS) - 1;
+
+    private static final long WORKER_ID_LEFT_SHIFT_BITS = SEQUENCE_BITS;
+
+    private static final long TIMESTAMP_LEFT_SHIFT_BITS = WORKER_ID_LEFT_SHIFT_BITS + WORKER_ID_BITS;
+
+    // 位运算计算workerId的最大值（workerId占10位，那么1向左移10位就是workerId的最大值）
+    private static final long WORKER_ID_MAX_VALUE = 1L << WORKER_ID_BITS;
+
+    @Setter
+    private static TimeService timeService = new TimeService();
+
+    private static long workerId;
+
+    // EPOCH就是起始时间，从2016-11-01 00:00:00开始的毫秒数
+    static {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2016, Calendar.NOVEMBER, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        EPOCH = calendar.getTimeInMillis();
+    }
+
+    private long sequence;
+
+    private long lastTime;
+
+    /**
+     * 得到分布式唯一ID需要先设置workerId，workId的值范围[0, 1024)
+     * @param workerId work process id
+     */
+    public static void setWorkerId(final long workerId) {
+        // google-guava提供的入参检查方法：workerId只能在0~WORKER_ID_MAX_VALUE之间；
+        Preconditions.checkArgument(workerId >= 0L && workerId < WORKER_ID_MAX_VALUE);
+        DefaultKeyGenerator.workerId = workerId;
+    }
+
+    /**
+     * 调用该方法，得到分布式唯一ID
+     * @return key type is @{@link Long}.
+     */
+    @Override
+    public synchronized Number generateKey() {
+        long currentMillis = timeService.getCurrentMillis();
+        // 每次取分布式唯一ID的时间不能少于上一次取时的时间
+        Preconditions.checkState(lastTime <= currentMillis, "Clock is moving backwards, last time is %d milliseconds, current time is %d milliseconds", lastTime, currentMillis);
+        // 如果同一毫秒范围内，那么自增，否则从0开始
+        if (lastTime == currentMillis) {
+            // 如果自增后的sequence值超过4096，那么等待直到下一个毫秒
+            if (0L == (sequence = ++sequence & SEQUENCE_MASK)) {
+                currentMillis = waitUntilNextTime(currentMillis);
+            }
+        } else {
+            sequence = 0;
+        }
+        // 更新lastTime的值，即最后一次获取分布式唯一ID的时间
+        lastTime = currentMillis;
+        // 从这里可知分布式唯一ID的组成部分；
+        return ((currentMillis - EPOCH) << TIMESTAMP_LEFT_SHIFT_BITS) | (workerId << WORKER_ID_LEFT_SHIFT_BITS) | sequence;
+    }
+
+    // 获取下一毫秒的方法：死循环获取当前毫秒与lastTime比较，直到大于lastTime的值；
+    private long waitUntilNextTime(final long lastTime) {
+        long time = timeService.getCurrentMillis();
+        while (time <= lastTime) {
+            time = timeService.getCurrentMillis();
+        }
+        return time;
+    }
+}

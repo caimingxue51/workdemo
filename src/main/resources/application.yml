@@ -1,0 +1,49 @@
+---
+spring:
+  datasource:
+    password: root
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/demo_ds_0?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  config-location: classpath:mybatis/mybatis-config.xml
+server:
+  port: 80
+#sharding:
+#  jdbc:
+#    datasource:
+#      names: ds_0,ds_1
+#      ds_1:
+#        password: root
+#        type: org.apache.commons.dbcp.BasicDataSource
+#        driver-class-name: com.mysql.jdbc.Driver
+#        url: jdbc:mysql://localhost:3306/demo_ds_1
+#        username: root
+#      ds_0:
+#        password: root
+#        type: org.apache.commons.dbcp.BasicDataSource
+#        driver-class-name: com.mysql.jdbc.Driver
+#        url: jdbc:mysql://localhost:3306/demo_ds_0
+#        username: root
+#    config:
+#      sharding:
+#        tables:
+#          t_order_item:
+#            table-strategy:
+#              inline:
+#                sharding-column: order_id
+#                algorithm-expression: t_order_item_$->{order_id % 2}
+#            key-generator-column-name: order_item_id
+#            actual-data-nodes: ds_$->{0..1}.t_order_item_$->{0..1}
+#          t_order:
+#            table-strategy:
+#              inline:
+#                sharding-column: order_id
+#                algorithm-expression: t_order_$->{order_id % 2}
+#            key-generator-column-name: order_id
+#            actual-data-nodes: ds_$->{0..1}.t_order_$->{0..1}
+#        default-database-strategy:
+#          inline:
+#            sharding-column: user_id
+#            algorithm-expression: ds_$->{user_id % 2}
