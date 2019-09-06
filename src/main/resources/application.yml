@@ -10,6 +10,9 @@ mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
 server:
   port: 80
+logging:
+  level:
+    root: warn
 #sharding:
 #  jdbc:
 #    datasource:
