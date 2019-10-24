@@ -93,7 +93,7 @@
         </dependency>-->
 
         <!--全局唯一ID生成器，Vesta -->
-        <dependency>
+       <!-- <dependency>
             <groupId>com.robert.vesta</groupId>
             <artifactId>vesta-service</artifactId>
             <version>0.0.1</version>
@@ -103,7 +103,7 @@
             <groupId>com.robert.vesta</groupId>
             <artifactId>vesta-intf</artifactId>
             <version>0.0.1</version>
-        </dependency>
+        </dependency>-->
 
         <!-- springboot,mybatis 整合包 -->
         <dependency>
