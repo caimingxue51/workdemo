@@ -1,5 +1,7 @@
 package com.test.demo.sharding;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -20,6 +22,7 @@ import java.net.NetworkInterface;
  * <p>
  * 64位ID (42(毫秒)+5(机器ID)+5(业务编码)+12(重复累加))
  */
+@Slf4j
 public class IdWorker {
     // 时间起始标记点，作为基准，一般取系统的最近时间（一旦确定不能变动）
     private final static long twepoch = 1288834974657L;
@@ -152,14 +155,14 @@ public class IdWorker {
                 id = id % (maxDatacenterId + 1);
             }
         } catch (Exception e) {
-            System.out.println( " getDatacenterId: " + e.getMessage() );
+            log.debug( " getDatacenterId: " + e.getMessage() );
         }
         return id;
     }
 
-    public static void main(String[] args) {
+    public static void test() {
 //        IdWorker idWorker = new IdWorker(31,31);
-//        System.out.println("idWorker="+idWorker.nextId());
+//        logger.debug("idWorker="+idWorker.nextId());
         IdWorker id = new IdWorker( 0, 1 );
 //        System.out.println("id="+id.nextId());
 //        System.out.println(id.datacenterId);

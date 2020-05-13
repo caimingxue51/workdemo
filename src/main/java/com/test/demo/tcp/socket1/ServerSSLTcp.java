@@ -1,24 +1,26 @@
-package com.test.demo.tcp;
+package com.test.demo.tcp.socket1;
 
-import java.io.BufferedReader;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-/*
- * 基于TCP协议的Socket通信，实现用户登陆
- * 服务器端
+/**
+ * @Author:cai.chaoxiong
+ * @Date: 2019/6/28 14:20
  */
-public class Server {
-    public static void main(String[] args) {
+public class ServerSSLTcp {
+    public static void test() {
         try {
             //1.创建一个服务器端Socket，即ServerSocket，指定绑定的端口，并监听此端口
-            ServerSocket serverSocket=new ServerSocket(8888);
+            SSLServerSocket serverSocket;
+
+            SSLServerSocketFactory factory = (SSLServerSocketFactory) SSLServerSocketFactory
+                    .getDefault();
+            serverSocket = (SSLServerSocket) factory
+                    .createServerSocket(8888);
             Socket socket=null;
             //记录客户端的数量
             int count=0;

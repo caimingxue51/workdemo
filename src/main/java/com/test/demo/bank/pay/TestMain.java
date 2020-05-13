@@ -8,7 +8,7 @@ import com.test.demo.bank.pay.bank.Context;
  */
 public class TestMain {
  
-    public static void main(String[] args) throws Exception {
+    public static void test() throws Exception {
         Context context = new Context();
         System.out.println(context.chalRecharge(2,2L));
     }

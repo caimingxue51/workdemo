@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
  * @Date: 2019/1/30 15:03
  */
 public class CutImsi {
+
     public static void main(String[] args) throws Exception {
         String inputName = "/oss/cmdlist.log";
         String ouputName = "/oss/imislist.txt";

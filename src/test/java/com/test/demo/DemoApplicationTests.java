@@ -14,7 +14,14 @@ import java.util.concurrent.locks.ReentrantLock;
 public class DemoApplicationTests {
 
 	@Test
-	public void contextLoads() {
+	public String contextLoads() {
+	    String PON_PORT= "/R1/S1/1/1";
+	    if(PON_PORT !=null && PON_PORT.length()>1){
+            return  PON_PORT.substring( 1 ).replace( "/","-" ).replaceAll( "[(A-Za-z)]","" );
+        }else {
+            return  PON_PORT;
+        }
+        //System.out.println( PON_PORT.substring( 1 ).replace( "/","-" ).replaceAll( "[(A-Za-z)]","" ) );
 	}
     /*public volatile int inc = 0;
 

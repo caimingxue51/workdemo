@@ -5,7 +5,7 @@ package com.test.demo.deadlock;
  * @Date: 2019/10/16 16:24
  */
 public class DeadLock {
-    public static void main(String[] args) {
+    public static void test() {
         final Object a = new Object();
         final Object b = new Object();
         Thread threadA = new Thread(new Runnable() {

@@ -15,7 +15,7 @@ public class BloomFilterTest {
  
     private static BloomFilter<Integer> bloomFilter = BloomFilter.create(Funnels.integerFunnel(), size,0.001);
  
-    public static void main(String[] args) {
+    public static void test() {
         for (int i = 0; i < size; i++) {
             bloomFilter.put(i);
         }
