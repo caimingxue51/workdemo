@@ -58,4 +58,12 @@ public class LambdaTest {
         Assert.assertThat(humans.get(0).getName(), equalTo(new Human("Sarah", 10).getName()));
     }
 
+    @Test
+    public void interfaceTest(){
+        String resulte = new Deal().say((msg)->{
+            System.out.println(msg);
+            return msg;
+        });
+    }
+
 }
