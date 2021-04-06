@@ -8,7 +8,11 @@ eureka:
   instance:
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
     prefer-ip-address: true
+
 spring:
+  elasticsearch:
+    jest:
+      uris: http://localhost:9200
   application:
     name: admin-client
   boot:
