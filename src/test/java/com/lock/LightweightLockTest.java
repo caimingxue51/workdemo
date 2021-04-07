@@ -8,13 +8,24 @@ public class LightweightLockTest {
     @Test
     public void test(){
         Object o = new Object();
- 
+        //Step 1
         System.out.println(ClassLayout.parseInstance(o).toPrintable());
- 
-        synchronized (o){
+        //Step 2
+        synchronized(o) {
             System.out.println(ClassLayout.parseInstance(o).toPrintable());
         }
-        
-        System.out.println(ClassLayout.parseInstance(o).toPrintable());
+        //Step 3
+        new Thread(()-> {
+            synchronized(o) {
+                System.out.println(ClassLayout.parseInstance(o).toPrintable());
+            }
+        }).start();
+        //Step 4
+        new Thread(()-> {
+            synchronized(o) {
+                System.out.println(ClassLayout.parseInstance(o).toPrintable());
+            }
+        }).start();
+
     }
 }
